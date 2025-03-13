@@ -5,6 +5,7 @@ import seaborn as sns
 import numpy as np
 from matplotlib.ticker import FormatStrFormatter
 from scipy import stats
+import os
 
 # Konfigurasi halaman
 st.set_page_config(
@@ -18,10 +19,16 @@ st.title("E-Commerce Analysis Dashboard")
 # Fungsi untuk memuat data dengan caching
 @st.cache_data
 def load_data():
-    # Memuat data langsung dari file CSV yang sudah dibersihkan
-    final_df = pd.read_csv(r"D:\Project\Analisis Data Dicoding\dashboard\clean_data.csv")
+    # Get the directory where this script is located
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Memastikan kolom tanggal dalam format datetime
+    # Construct path to the CSV file
+    file_path = os.path.join(current_dir, "clean_data.csv")
+    
+    # Load the data
+    final_df = pd.read_csv(file_path)
+    
+    # Convert date columns
     date_columns = ['order_purchase_timestamp', 'order_delivered_customer_date', 'order_estimated_delivery_date']
     for col in date_columns:
         if col in final_df.columns and not pd.api.types.is_datetime64_any_dtype(final_df[col]):
